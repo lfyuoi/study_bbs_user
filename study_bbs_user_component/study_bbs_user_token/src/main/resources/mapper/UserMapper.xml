@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.cloud.mapper.UserMapper" >
+
+    <resultMap id="base_result" type="com.bbs.cloud.dto.UserDTO">
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="username" property="username" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="salt" property="salt" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="table">user</sql>
+
+    <sql id="base_column">id, username, password, salt</sql>
+
+    <insert id="insertUser">
+        insert into
+            <include refid="table" />
+            (<include refid="base_column" />)
+        values (#{id}, #{username}, #{password}, #{salt})
+    </insert>
+
+    <select id="queryUserByUsername" resultMap="base_result">
+        select * from
+            <include refid="table" />
+        where username=#{username}
+    </select>
+</mapper>
