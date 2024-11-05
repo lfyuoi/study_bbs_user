@@ -1,9 +1,12 @@
 package com.bbs.cloud.service;
 
 
+import com.bbs.cloud.common.contant.RabbitContant;
 import com.bbs.cloud.common.contant.RedisContant;
 import com.bbs.cloud.common.enums.user.LoginTicketStatusEnum;
 import com.bbs.cloud.common.local.HostHolder;
+import com.bbs.cloud.common.message.user.UserMessageDTO;
+import com.bbs.cloud.common.message.user.enums.UserMessageTypeEnum;
 import com.bbs.cloud.common.result.HttpResult;
 import com.bbs.cloud.common.util.CommonUtil;
 import com.bbs.cloud.common.util.JsonUtils;
@@ -18,6 +21,7 @@ import com.bbs.cloud.param.LoginParam;
 import com.bbs.cloud.param.RegisterParam;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -38,6 +42,9 @@ public class TokenService {
 
     @Autowired
     private HostHolder hostHolder;
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
 
     final static Logger logger = LoggerFactory.getLogger(TokenService.class);
 
@@ -87,9 +94,15 @@ public class TokenService {
         loginTicketDTO.setExpired(new Date(expired));
         loginTicketMapper.insertTicket(loginTicketDTO);
 
-        /**
-         * TODO 异步创建用户的背包，背包礼物列表，积分卡
-         */
+
+        UserMessageDTO userMessageDTO = new UserMessageDTO();
+        userMessageDTO.setId(CommonUtil.createUUID());
+        userMessageDTO.setUserId(userDTO.getId());
+        userMessageDTO.setType(UserMessageTypeEnum.BBS_CLOUD_USER_INFO_CREATE.getType());
+        userMessageDTO.setCreateDate(new Date());
+        rabbitTemplate.convertAndSend(RabbitContant.USER_EXCHANGE_NAME, RabbitContant.USER_ROUTING_KEY,JsonUtils.objectToJson(userMessageDTO));
+
+
         UserVO userVO = new UserVO();
         userVO.setId(userDTO.getId());
         userVO.setUsername(userDTO.getUsername());

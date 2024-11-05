@@ -42,22 +42,22 @@ public class RedisContant {
      */
     public static final String BBS_CLOUD_USER_TICKET_KEY = "bbs:cloud:user:ticket:key:";
 
-//    /**
-//     * 用户背包KEY
-//     */
-//    public static final String BBS_CLOUD_USER_BACKPACK_KEY = "bbs:cloud:user:backpack:key:";
+    /**
+     * 用户背包KEY
+     */
+    public static final String BBS_CLOUD_USER_BACKPACK_KEY = "bbs:cloud:user:backpack:key:";
 
     public static final String BBS_CLOUD_USER_BACKPACK_LOCK_KEY = "bbs:cloud:user:backpack:lock:key:";
 
-//    /**
-//     * 用户背包礼物KEY
-//     * @param userId
-//     * @param giftType
-//     * @return
-//     */
-//    public static String getBbsCloudUserBackpackGiftKey(String userId, Integer giftType) {
-//        return "bbs:cloud:user:backpack:gift:key:" + userId + ":gift:" + giftType;
-//    }
+    /**
+     * 用户背包礼物KEY
+     * @param userId
+     * @param giftType
+     * @return
+     */
+    public static String getBbsCloudUserBackpackGiftKey(String userId, Integer giftType) {
+        return "bbs:cloud:user:backpack:gift:key:" + userId + ":gift:" + giftType;
+    }
     public static String getUserBagHashKey (String userId){
         return "bbs:cloud:user:backpack:key:"+userId;
     }
@@ -75,6 +75,9 @@ public class RedisContant {
      */
     public static final String BBS_CLOUD_USER_SCORE_CARD_KEY = "bbs:cloud:user:score:card:key:";
 
+    /**
+     *  用户积分锁
+     */
     public static final String BBS_CLOUD_USER_SCORE_CARD_LOCK = "bbs:cloud:user:score:card:lock:";
 
 
