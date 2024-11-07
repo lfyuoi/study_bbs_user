@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.cloud.essay.mapper.EssayTopicMapper" >
+
+    <resultMap id="base_result" type="com.bbs.cloud.essay.dto.EssayTopicDTO" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="essay_id" property="essayId" jdbcType="VARCHAR" />
+        <result column="rule" property="rule" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="table">essay_topic</sql>
+
+    <sql id="Base_Column_List">id, essay_id, rule</sql>
+
+
+
+    <insert id="insertEssayTopicDTO">
+        insert into
+        <include refid="table" />
+        ( <include refid="Base_Column_List" /> )
+        values
+        <foreach collection="data" item="item" separator=",">
+            (#{item.id}, #{item.essayId}, #{item.rule})
+        </foreach>
+    </insert>
+</mapper>
