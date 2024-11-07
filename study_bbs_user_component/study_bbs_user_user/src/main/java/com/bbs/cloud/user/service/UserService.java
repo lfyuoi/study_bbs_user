@@ -44,6 +44,7 @@ import java.util.Map;
 public class UserService {
 
     final static Logger logger = LoggerFactory.getLogger(UserService.class);
+
     @Autowired
     private HostHolder hostHolder;
 

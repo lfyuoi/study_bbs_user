@@ -14,6 +14,7 @@
     <modules>
         <module>study_bbs_user_token</module>
         <module>study_bbs_user_user</module>
+        <module>study_bbs_user_essay</module>
     </modules>
 
     <dependencies>
