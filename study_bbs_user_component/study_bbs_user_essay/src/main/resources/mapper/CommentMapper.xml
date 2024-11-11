@@ -33,4 +33,9 @@
         select * from <include refid="table" />
         where id=#{id}
     </select>
+
+    <select id="queryEssayIdAndEntityIdCommentDTO" resultMap="base_result">
+        select * from <include refid="table" />
+        where essay_id=#{essayId},entityId=#{entityId}
+    </select>
 </mapper>

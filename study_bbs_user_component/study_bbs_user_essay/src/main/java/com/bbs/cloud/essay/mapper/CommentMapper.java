@@ -11,4 +11,6 @@ public interface CommentMapper {
     void insertCommentDOT(CommentDTO commentDTO);
 
     CommentDTO queryCommentDTO(@Param("id") String id);
+
+    CommentDTO queryEssayIdAndEntityIdCommentDTO(@Param("essayId") String essayId, @Param("entityId") String entityId);
 }

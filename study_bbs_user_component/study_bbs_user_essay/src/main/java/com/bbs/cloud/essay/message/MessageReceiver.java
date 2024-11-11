@@ -1,8 +1,8 @@
-package com.bbs.cloud.user.message;
+package com.bbs.cloud.essay.message;
 
 import com.bbs.cloud.common.contant.RabbitContant;
 import com.bbs.cloud.common.contant.RedisContant;
-import com.bbs.cloud.common.message.user.UserMessageDTO;
+import com.bbs.cloud.common.message.essay.EssayMessageDTO;
 import com.bbs.cloud.common.util.JedisUtil;
 import com.bbs.cloud.common.util.JsonUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -25,7 +25,7 @@ public class MessageReceiver implements ApplicationRunner {
     final static Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
 
     @Autowired
-    private List<MessageHandler> messageHandlers;
+    private List<EssayMessageHandler> essayMessageHandlers;
 
     @Autowired
     private JedisUtil jedisUtil;
@@ -47,17 +47,17 @@ public class MessageReceiver implements ApplicationRunner {
 
     private static final AtomicInteger atomicInteger = new AtomicInteger(0);
 
-    @RabbitListener(queues = RabbitContant.USER_QUEUE_NAME)
+    @RabbitListener(queues = RabbitContant.ESSAY_QUEUE_NAME)
     public void receiver(String message) {
         logger.info("接收到用户产生的消息：{}", message);
         if (StringUtils.isEmpty(message)) {
             logger.info("接收到用户产生的消息，消息为空:{}", message);
             return;
         }
-        UserMessageDTO userMessageDTO;
+        EssayMessageDTO essayMessageDTO;
         try {
-            userMessageDTO = JsonUtils.jsonToPojo(message, UserMessageDTO.class);
-            if (userMessageDTO == null) {
+            essayMessageDTO = JsonUtils.jsonToPojo(message, EssayMessageDTO.class);
+            if (essayMessageDTO == null) {
                 logger.info("接收到用户产生的消息，消息转换为空:{}", message);
                 return;
             }
@@ -67,12 +67,12 @@ public class MessageReceiver implements ApplicationRunner {
             e.printStackTrace();
             return;
         }
-        String messageDTOType = userMessageDTO.getType();
+        String essayMessageDTOType = essayMessageDTO.getType();
 
-        messageHandlers.stream()
-                .filter(item -> item.getHandlerType().equals(messageDTOType))
+        essayMessageHandlers.stream()
+                .filter(item -> item.getEssayHandlerType().equals(essayMessageDTOType))
                 .findFirst().get()
-                .handler(userMessageDTO);
+                .handler(essayMessageDTO);
 
         jedisUtil.lpush(RedisContant.BBS_CLOUD_ESSAY_MESSAGE_LIST, message);
     }
@@ -100,7 +100,7 @@ public class MessageReceiver implements ApplicationRunner {
             if (atomicInteger.get() < 50) {
                 String message = jedisUtil.lpop(RedisContant.BBS_CLOUD_ESSAY_MESSAGE_LIST);
 
-                UserMessageDTO userMessageDTO = null;
+                EssayMessageDTO essayMessageDTO = null;
 
                 if (StringUtils.isEmpty(message)) {
                     logger.info("从redis中获取消息-essay消息为空, message:{}", message);
@@ -108,8 +108,8 @@ public class MessageReceiver implements ApplicationRunner {
                 }
 
                 try {
-                    userMessageDTO = JsonUtils.jsonToPojo(message, UserMessageDTO.class);
-                    if (userMessageDTO == null) {
+                    essayMessageDTO = JsonUtils.jsonToPojo(message, EssayMessageDTO.class);
+                    if (essayMessageDTO == null) {
                         logger.info("接收user-从redis中获取消息，转换为空, message:{}", message);
                         continue;
                     }
@@ -118,16 +118,16 @@ public class MessageReceiver implements ApplicationRunner {
                     e.printStackTrace();
                 }
 
-                String type = userMessageDTO.getType();
+                String type = essayMessageDTO.getType();
 
-                UserMessageDTO finalUserMessageDTO = userMessageDTO;
+                EssayMessageDTO finalUserMessageDTO = essayMessageDTO;
 
                 executorPool.execute(() -> {
                     try {
                         //atomicInteger.incrementAndGet();
                         semaphore.acquire();
-                        MessageHandler messageManage = messageHandlers.stream()
-                                .filter(item -> item.getHandlerType().equals(type))
+                        EssayMessageHandler messageManage = essayMessageHandlers.stream()
+                                .filter(item -> item.getEssayHandlerType().equals(type))
                                 .findFirst().get();
                         messageManage.handler(finalUserMessageDTO);
                         //atomicInteger.decrementAndGet();

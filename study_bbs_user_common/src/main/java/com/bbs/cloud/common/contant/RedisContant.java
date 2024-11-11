@@ -101,4 +101,14 @@ public class RedisContant {
      * 存放用户的文章的消息
      */
     public static final String BBS_CLOUD_USER_ESSAY_MESSAGE_LIST = "bbs:cloud:essay:message:list";
+
+    /**
+     * 存放用户的点赞记录
+     */
+    public static final String BBS_CLOUD_LIKE_MESSAGE_LIST = "bbs:cloud:essay:like:message:list";
+
+    /**
+     * 存放用户的打赏记录
+     */
+    public static final String BBS_CLOUD_PLAY_TOUR_MESSAGE_LIST = "bbs:cloud:essay:play:message:list";
 }

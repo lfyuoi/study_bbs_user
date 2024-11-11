@@ -79,7 +79,7 @@ public class RobLuckyBagMessageHandler implements MessageHandler {
     }
 
     @Override
-    public String gerHandlerType() {
+    public String getHandlerType() {
         return UserMessageTypeEnum.BBS_CLOUD_USER_ROB_LUCKY_BAG.getType();
     }
 }

@@ -9,13 +9,13 @@ public class LikeParam {
     /**
      * 点赞的ID
      */
-    private String entityId;
+    private String essayId;
 
-    public String getEntityId() {
-        return entityId;
+    public String getEssayId() {
+        return essayId;
     }
 
-    public void setEntityId(String entityId) {
-        this.entityId = entityId;
+    public void setEssayId(String essayId) {
+        this.essayId = essayId;
     }
 }

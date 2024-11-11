@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.cloud.essay.mapper.PlayTourRecordMapper" >
+
+    <resultMap id="base_result" type="com.bbs.cloud.essay.dto.PlayTourRecordDTO" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="send_user_id" property="sendUserId" jdbcType="VARCHAR" />
+        <result column="take_user_id" property="takeUserId" jdbcType="VARCHAR" />
+        <result column="gift_type" property="giftType" jdbcType="INTEGER" />
+        <result column="entity_id" property="entityId" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="DATE" />
+        <result column="entity_type" property="entityType" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <sql id="table">play_tour_record</sql>
+
+    <sql id="Base_Column_List">id,send_user_id,take_user_id,gift_type,entity_id,entity_type,create_date</sql>
+    <insert id="insertPlayTourRecordMapper">
+        insert into
+        <include refid="table"></include>
+        (<include refid="Base_Column_List"></include>)
+        values
+        (#{id},#{send_user_id},#{take_user_id},#{gift_type},#{entity_id},#{entity_type},#{create_date})
+    </insert>
+
+
+</mapper>

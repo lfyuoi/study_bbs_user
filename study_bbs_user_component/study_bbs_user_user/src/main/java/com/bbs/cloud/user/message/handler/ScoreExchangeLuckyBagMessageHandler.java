@@ -81,7 +81,7 @@ public class ScoreExchangeLuckyBagMessageHandler implements MessageHandler {
     }
 
     @Override
-    public String gerHandlerType() {
+    public String getHandlerType() {
         return UserMessageTypeEnum.BBS_CLOUD_USER_SCORE_CONVERT_LUCKY_BAG.getType();
     }
 }

@@ -14,6 +14,7 @@ import com.bbs.cloud.common.message.user.UserMessageDTO;
 import com.bbs.cloud.common.message.user.dto.RobLuckyBagMessage;
 import com.bbs.cloud.common.message.user.dto.RobRedPacketMessage;
 import com.bbs.cloud.common.message.user.dto.ScoreConvertLuckyBagMessage;
+import com.bbs.cloud.common.message.user.dto.ScoreConvertMoneyMessage;
 import com.bbs.cloud.common.message.user.enums.UserMessageTypeEnum;
 import com.bbs.cloud.common.result.HttpResult;
 import com.bbs.cloud.common.util.CommonUtil;
@@ -28,6 +29,7 @@ import com.bbs.cloud.user.exception.UserException;
 import com.bbs.cloud.user.param.ScoreExchangeGoldParam;
 import com.bbs.cloud.user.result.UserInfoResult;
 import com.bbs.cloud.user.result.vo.GiftVO;
+import jodd.cli.Param;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -430,7 +432,7 @@ public class UserService {
                 return HttpResult.fail();
             }
         } catch (HttpException e) {
-            scoreExchangeGoldErrorHandler(e.getCode());
+            scoreExchangeGoldErrorHandler(userId,e.getCode(),gold,consumeScore);
             e.printStackTrace();
             return HttpResult.fail();
         } finally {
@@ -438,20 +440,38 @@ public class UserService {
         }
 
         /**
-         * TODO MQ异步处理，课后作业，通过模拟一些场景或者第三接口在活动金币扣减的过程中，通过策略模式完成补偿机制
+         * TODO 完成待审查
+         * MQ异步处理，课后作业，通过模拟一些场景或者第三接口在活动金币扣减的过程中，通过策略模式完成补偿机制
          */
+        ScoreConvertMoneyMessage scoreConvertMoneyMessage = new ScoreConvertMoneyMessage();
+        scoreConvertMoneyMessage.setGold(gold);
+        scoreConvertMoneyMessage.setConsumeScore(consumeScore);
+        scoreConvertMoneyMessage.setActivityId(activityId);
+        UserMessageDTO userMessageDTO = UserMessageDTO.getUserMessageDTO(
+                UserMessageTypeEnum.BBS_CLOUD_USER_SCORE_CONVERT_MONEY.getType(),
+                userId,
+                JsonUtils.objectToJson(scoreConvertMoneyMessage)
+        );
+        rabbitTemplate.convertAndSend(RabbitContant.USER_EXCHANGE_NAME, RabbitContant.USER_ROUTING_KEY, JsonUtils.objectToJson(userMessageDTO));
 
 
         return new HttpResult(gold);
     }
 
-    private void scoreExchangeGoldErrorHandler(Integer code) {
+    private void scoreExchangeGoldErrorHandler(String userId,Integer code,Integer gold,Integer consumeScore) {
         if (UserException.BEFORE.getCode().equals(code)) {
             //补偿机制
+            logger.info("用户积分兑换金币活动,在活动金币扣减之前发生异常,执行补偿机制,userId：{}", userId);
+            jedisUtil.incrBy(RedisContant.BBS_CLOUD_USER_SCORE_CARD_KEY + userId, Long.valueOf(consumeScore));
         } else if (UserException.CENTER.getCode().equals(code)) {
             //补偿机制
+            logger.info("用户积分兑换金币活动,在活动金币扣减之后发生异常,执行补偿机制,userId：{}", userId);
+            jedisUtil.incrBy(RedisContant.BBS_CLOUD_ACTIVITY_SCORE_GOLD, Long.valueOf(gold));
         } else if (UserException.AFTER.getCode().equals(code)) {
             //补偿机制
+            logger.info("用户积分兑换金币活动,活动金币扣减后, 用户金币增加后发生异常,执行补偿机制,userId：{}", userId);
+            jedisUtil.incrBy(RedisContant.BBS_CLOUD_ACTIVITY_SCORE_GOLD, Long.valueOf(gold));
+            jedisUtil.decrBy(RedisContant.BBS_CLOUD_USER_BACKPACK_KEY + userId , Long.valueOf(consumeScore));
         }
     }
 }

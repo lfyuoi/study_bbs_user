@@ -2,6 +2,8 @@ package com.bbs.cloud.common.message.essay.enums;
 
 public enum EssayMessageTypeEnum {
 
+    BBS_CLOUD_ESSAY_PUBLISH("BBS_CLOUD_ESSAY_PUBLISH", "BBS_CLOUD_ESSAY_PUBLISH", "用户发布文章产生的消息"),
+
     BBS_CLOUD_ESSAY_LIKED("BBS_CLOUD_ESSAY_LIKED", "BBS_CLOUD_ESSAY_LIKED", "用户点赞产生的消息"),
 
     BBS_CLOUD_ESSAY_UNLIKED("BBS_CLOUD_ESSAY_UNLIKED", "BBS_CLOUD_ESSAY_UNLIKED", "用户取消点赞产生的消息"),

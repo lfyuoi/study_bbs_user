@@ -6,5 +6,5 @@ public interface MessageHandler {
 
     public void handler(UserMessageDTO userMessageDTO);
 
-    public String gerHandlerType();
+    public String getHandlerType();
 }

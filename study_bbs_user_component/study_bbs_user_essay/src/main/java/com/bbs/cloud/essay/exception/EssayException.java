@@ -25,7 +25,8 @@ public enum EssayException implements ExceptionCode {
 
     REDIRECT_RECHARGE_VIEW(200010, "跳转到充值界面", "REDIRECT_RECHARGE_VIEW"),
     ENTITY_TYPE_IS_ERROR(2000011, "被评论的目标实体类型错误", " ENTITY_TYPE_IS_ERROR"),
-    PLAY_TOUR_IS_NOT_EXIST(200007, "打赏内容不存在", "PLAY_TOUR_IS_NOT_EXIST"),
+    PLAY_TOUR_IS_NOT_EXIST(200012, "打赏内容不存在", "PLAY_TOUR_IS_NOT_EXIST"),
+    COMMENT_SECOND_CONTENT(200008, "重复评论", "COMMENT_SECOND_CONTENT"),
 
 
     ;

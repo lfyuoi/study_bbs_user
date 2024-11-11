@@ -11,5 +11,13 @@
     </parent>
 
     <artifactId>study_bbs_user_essay</artifactId>
+    <dependencies>
+        <dependency>
+            <groupId>com.bbs.cloud.user</groupId>
+            <artifactId>study_bbs_user_user</artifactId>
+            <version>1.0-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
 
 </project>
