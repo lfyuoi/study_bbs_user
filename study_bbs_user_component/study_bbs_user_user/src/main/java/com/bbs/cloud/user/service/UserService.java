@@ -209,7 +209,7 @@ public class UserService {
                 JsonUtils.objectToJson(robRedPacketMessage));
         rabbitTemplate.convertAndSend(RabbitContant.USER_EXCHANGE_NAME, RabbitContant.USER_ROUTING_KEY, JsonUtils.objectToJson(userMessageDTO));
 
-        //3.将抢福袋的行为记录到用户的日志中,进行更新操作
+        //3.将抢红包的行为记录到用户的日志中,进行更新操作
         UpdateRedPacketMessage updateRedPacketMessage = new UpdateRedPacketMessage();
         updateRedPacketMessage.setRedPacketId(redPacketDTO.getId());
         updateRedPacketMessage.setActivityId(redPacketDTO.getActivityId());

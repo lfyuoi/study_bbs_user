@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.bbs.cloud.user.mapper.ScoreConsumeRecordMapper" >
+
+    <resultMap id="base_result" type="com.bbs.cloud.user.dto.ScoreConsumeRecordDTO" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="activity_id" property="activityId" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="INTEGER" />
+        <result column="score_consume" property="scoreConsume" jdbcType="INTEGER" />
+        <result column="gold" property="gold" jdbcType="INTEGER" />
+        <result column="lucky_bag_id" property="luckyBagId" jdbcType="VARCHAR" />
+        <result column="gift_type" property="giftType" jdbcType="INTEGER" />
+        <result column="create_date" property="createDate" jdbcType="TIME" />
+    </resultMap>
+
+    <sql id="table">score_consume_record</sql>
+
+    <sql id="Base_Column_List">id, user_id, activity_id,type,score_consume,gold,lucky_bag_id,gift_type,create_date</sql>
+
+
+    <insert id="insertScoreConsumeRecord">
+        insert into
+            <include refid="table" />
+            ( <include refid="Base_Column_List" /> )
+        values
+            (#{id}, #{userId},#{activityId},#{type},#{scoreConsume},#{gold},#{luckyBagId},#{giftType},#{createDate});
+    </insert>
+
+    <select id="queryScoreConsumeRecord" resultMap="base_result">
+        select * from
+        <include refid="table" />
+        where user_id=#{userId}
+    </select>
+</mapper>

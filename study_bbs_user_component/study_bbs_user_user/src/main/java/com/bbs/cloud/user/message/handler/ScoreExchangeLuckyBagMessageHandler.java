@@ -1,5 +1,6 @@
 package com.bbs.cloud.user.message.handler;
 
+import com.bbs.cloud.common.enums.activity.ActivityTypeEnum;
 import com.bbs.cloud.common.enums.gift.GiftEnum;
 import com.bbs.cloud.common.message.user.UserMessageDTO;
 import com.bbs.cloud.common.message.user.dto.RobLuckyBagMessage;
@@ -18,6 +19,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 
+/**
+ * 处理积分兑换福袋产生的消息
+ */
 @Service
 public class ScoreExchangeLuckyBagMessageHandler implements MessageHandler {
 
@@ -38,6 +42,9 @@ public class ScoreExchangeLuckyBagMessageHandler implements MessageHandler {
 
     @Autowired
     private ScoreCardMapper scoreCardMapper;
+
+    @Autowired
+    private ScoreConsumeRecordMapper scoreConsumeRecordMapper;
 
     @Override
     public void handler(UserMessageDTO userMessageDTO) {
@@ -67,6 +74,18 @@ public class ScoreExchangeLuckyBagMessageHandler implements MessageHandler {
             luckyBagRecordDTO.setActivityId(scoreConvertLuckyBagMessage.getActivityId());
             luckyBagRecordDTO.setLuckyBagId(scoreConvertLuckyBagMessage.getLuckyBagId());
             luckyBagRecordMapper.insertLuckyBagRecordDTO(luckyBagRecordDTO);
+
+            //添加积分消费记录
+            ScoreConsumeRecordDTO scoreConsumeRecordDTO = new ScoreConsumeRecordDTO();
+            scoreConsumeRecordDTO.setId(CommonUtil.createUUID());
+            scoreConsumeRecordDTO.setUserId(userId);
+            scoreConsumeRecordDTO.setScoreConsume(scoreConvertLuckyBagMessage.getConsumeScore());
+            scoreConsumeRecordDTO.setCreateDate(new Date());
+            scoreConsumeRecordDTO.setLuckyBagId(scoreConvertLuckyBagMessage.getLuckyBagId());
+            scoreConsumeRecordDTO.setGiftType(giftType);
+            scoreConsumeRecordDTO.setType(ActivityTypeEnum.SCORECARD_LUCKY_BAG.getType());
+            scoreConsumeRecordDTO.setActivityId(scoreConvertLuckyBagMessage.getActivityId());
+            scoreConsumeRecordMapper.insertScoreConsumeRecord(scoreConsumeRecordDTO);
 
             //第三步：添加用户操作日志
             UserLogRecordDTO userLogRecordDTO = new UserLogRecordDTO(

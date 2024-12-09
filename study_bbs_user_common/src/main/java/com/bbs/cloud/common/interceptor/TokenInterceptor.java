@@ -19,6 +19,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 拦截器
+ * 获取token中的ticket会话令牌
+ * 验证该令牌的有效性
+ */
 @Component
 public class TokenInterceptor implements HandlerInterceptor {
 
@@ -81,6 +86,14 @@ public class TokenInterceptor implements HandlerInterceptor {
         return matcher.group("token");//从上面的正则表达式中获取token
     }
 
+    /**
+     * 在请求处理之后、视图渲染之前被调用，这里为空实现。
+     * @param request
+     * @param response
+     * @param handler
+     * @param modelAndView
+     * @throws Exception
+     */
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
 
